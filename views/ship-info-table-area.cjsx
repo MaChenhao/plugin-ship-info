@@ -49,6 +49,7 @@ ShipInfoTable = React.createClass
     luckyMax = @props.shipInfo.lucky[1]
     lucky = @props.shipInfo.lucky[0]
     lv = @props.shipInfo.lv
+    afterlv = @props.shipInfo.afterlv
     nowhp = @props.shipInfo.nowhp
     maxhp = @props.shipInfo.maxhp
 
@@ -104,12 +105,22 @@ ShipInfoTable = React.createClass
       condColor = 'rgba(255, 255, 0, 0.4)'
     else
       condColor = 'transparent'
+    
+    if @props.shipInfo.afterlv <= @props.shipInfo.lv
+       afterlvColor = 'rgba(255, 255, 0, 0.4)'
+    else
+       afterlvColor = 'transparent'
+    
+    if @props.shipInfo.afterlv == 0
+       afterlvString = 'MAX'
+    else
+       afterlvString = @props.shipInfo.afterlv
 
     <tr>
       <td>{@props.shipInfo.id}</td>
       <td>{@props.shipInfo.type}</td>
       <td>{@props.shipInfo.name}</td>
-      <td className='center'>{@props.shipInfo.lv}</td>
+      <td className='center' style={backgroundColor: afterlvColor}>{@props.shipInfo.lv + '/'}<span style={fontSize: '80%'}>{afterlvString}</span></td>
       <td className='center' style={backgroundColor: condColor}>{@props.shipInfo.cond}</td>
       <td className={karyokuClass}>{karyoku + '/'}<span style={fontSize: '80%'}>{karyokuString}</span></td>
       <td className={raisouClass}>{raisou + '/'}<span style={fontSize: '80%'}>{raisouString}</span></td>
@@ -142,6 +153,7 @@ ShipInfoTableArea = React.createClass
             type: $shipTypes[$ships[ship.api_ship_id].api_stype].api_name
             name: $ships[ship.api_ship_id].api_name
             lv:  ship.api_lv
+            afterlv: ship.api_afterlv
             cond: ship.api_cond
             karyoku: ship.api_karyoku
             houg: ship.api_houg
@@ -170,6 +182,7 @@ ShipInfoTableArea = React.createClass
           type: $shipTypes[$ships[ship.api_ship_id].api_stype].api_name
           name: $ships[ship.api_ship_id].api_name
           lv:  ship.api_lv
+          afterlv: ship.api_afterlv
           cond: ship.api_cond
           karyoku: ship.api_karyoku
           houg: $ships[ship.api_ship_id].api_houg
