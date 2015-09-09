@@ -13,16 +13,17 @@ Slotitems = React.createClass
       for itemId in @props.data
         continue if itemId == -1
         item = _slotitems[itemId]
-        itemInfo = $slotitems[item.api_slotitem_id]
-        if item.api_level > 0
-          name = itemInfo.api_name + ' ' + item.api_level + '★'
-        else
-          name = itemInfo.api_name
-        <img key={itemId} title={name} src={
-            path = require 'path'
-            path.join(ROOT, 'assets', 'img', 'slotitem', "#{itemInfo.api_type[3] + 100}.png")
-          }
-        />
+        if item?
+          itemInfo = $slotitems[item.api_slotitem_id]
+          if item.api_level > 0
+            name = itemInfo.api_name + ' ' + item.api_level + '★'
+          else
+            name = itemInfo.api_name
+          <img key={itemId} title={name} src={
+              path = require 'path'
+              path.join(ROOT, 'assets', 'img', 'slotitem', "#{itemInfo.api_type[3] + 100}.png")
+            }
+          />
     }
     </div>
 
@@ -243,6 +244,26 @@ ShipInfoTableArea = React.createClass
         if id in expeditionShips then true else false
       when 2
         if id in expeditionShips then false else true
+  handleModernizationFilter: (ship) ->
+    karyokuNow = ship.houg[0] + ship.kyouka[0]
+    karyokuMax = ship.karyoku[1]
+    raisouNow = ship.raig[0] + ship.kyouka[1]
+    raisouMax = ship.raisou[1]
+    taikuNow = ship.tyku[0] + ship.kyouka[2]
+    taikuMax = ship.taiku[1]
+    soukouNow = ship.souk[0] + ship.kyouka[3]
+    soukouMax = ship.soukou[1]
+    isCompleted = karyokuNow >= karyokuMax and
+                  raisouNow >= raisouMax and
+                  taikuNow >= taikuMax and
+                  soukouNow >= soukouMax
+    switch @props.modernizationRadio
+      when 0
+        true
+      when 1
+        isCompleted
+      when 2
+        not isCompleted
   handleShowRows: ->
     #typeFilterPreprocess
     $shipTypes = window.$shipTypes
@@ -262,11 +283,12 @@ ShipInfoTableArea = React.createClass
     #filter
     showRows = []
     for row in @state.rows
-      if @handleTypeFilter(row.type, shipTypes)
-        if @handleLvFilter(row.lv)
-          if @handleLockedFilter(row.locked)
-            if @handleExpeditionFilter(row.id, expeditionShips)
-              showRows.push row
+      if @handleTypeFilter(row.type, shipTypes) and
+         @handleLvFilter(row.lv) and
+         @handleLockedFilter(row.locked) and
+         @handleExpeditionFilter(row.id, expeditionShips) and
+         @handleModernizationFilter(row)
+        showRows.push row
     #showRowsSort
     switch @props.sortName
       when 'karyoku'
