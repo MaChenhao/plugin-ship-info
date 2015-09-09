@@ -32,10 +32,10 @@ if config.get('plugin.ShipInfo.enable', true)
   initialShipInfoWindow()
 
 module.exports =
-  name: 'ShipInfo'
-  priority: 50
+  name: 'ShipInfo-mch'
+  priority: 51
   displayName: <span><FontAwesome name='ship' key={0} />{' ' + __('Ship Girls Info')}</span>
-  author: 'Yunze'
+  author: 'mch'
   link: 'https://github.com/myzwillmake'
   version: '1.3.0'
   description: __ 'Show detailed information of all owned ship girls'
